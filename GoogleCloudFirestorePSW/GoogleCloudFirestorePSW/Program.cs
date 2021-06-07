@@ -16,7 +16,6 @@ namespace GoogleCloudFirestorePSW
             Console.WriteLine("Created Cloud Firestore client with project ID: {0}", project);
             CollectionReference collection = db.Collection("detainees");
 
-
             int quit = 0;
             while (quit == 0)
             {
@@ -28,7 +27,8 @@ namespace GoogleCloudFirestorePSW
                 Console.WriteLine("3 - Dodaj");
                 Console.WriteLine("4 - edytuj");
                 Console.WriteLine("5 - usun");
-                Console.WriteLine("6 - Quit");
+                Console.WriteLine("6 - wyświetl powód zatrzymania");
+                Console.WriteLine("7 - Quit");
 
 
                 string choice = Console.ReadLine();
@@ -50,11 +50,11 @@ namespace GoogleCloudFirestorePSW
                         break;
                     case "2":
                         QuerySnapshot querySnapshot123 = await collection.GetSnapshotAsync();
-                        Console.WriteLine($"liczba zatrzymanych {querySnapshot123.Documents.Count}"); 
+                        Console.WriteLine($"liczba zatrzymanych {querySnapshot123.Documents.Count}");
 
                         break;
                     case "3":
-                        
+
                         Console.WriteLine("podaj imie ");
                         string name = Console.ReadLine();
                         Console.WriteLine("podaj nazwisko");
@@ -128,6 +128,21 @@ namespace GoogleCloudFirestorePSW
 
                         break;
                     case "6":
+                        Console.WriteLine("podaj  imie");
+                        string name29 = Console.ReadLine();
+                        Console.WriteLine("podaj  nazwisko");
+                        string name39 = Console.ReadLine();
+                        Query query = collection.WhereEqualTo("FirstName", name29).WhereEqualTo("LastName", name39);
+                        QuerySnapshot querySnapshot33 = await query.GetSnapshotAsync();
+                        foreach (DocumentSnapshot documentSnapshot in querySnapshot33.Documents)
+                        {
+                            string firstName3 = documentSnapshot.GetValue<string>("FirstName");
+                            string lastName3 = documentSnapshot.GetValue<string>("LastName");
+                            string reasonForTheDetention123 = documentSnapshot.GetValue<string>("ReasonForTheDetention");
+                            Console.WriteLine($"{documentSnapshot.Id} => {firstName3} {lastName3}, powód zatrzymania {reasonForTheDetention123}");
+                        }
+                        break;
+                    case "7":
                         quit = 1;
                         Console.WriteLine("Wyjscie");
                         break;
